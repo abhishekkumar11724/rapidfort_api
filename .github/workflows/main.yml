@@ -35,4 +35,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: abhishek11724/rapidfort_api.0.0.1.RELEASE
+        tags: abhishek11724/rapidfort_api
