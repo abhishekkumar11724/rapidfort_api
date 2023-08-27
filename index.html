@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body {
+        margin: 100px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        background-color: rgb(208, 208, 208);
+        text-align: center;
+      }
+      h2 {
+        font-size: 50px;
+      }
+      div {
+        margin-top: 100px;
+        font-size: 30px;
+      }
+      input {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      .submit-button {
+        margin: 50px;
+      }
+
+    </style>
+</head>
+<body>  
+    <h2>An <code>App</code> to get details of a <code>"Random file"</code> </h2>
+    <form action="/" enctype="multipart/form-data" method="post">
+      <div>File:
+        <input type="file" name="myFile" multiple="multiple" />
+      </div>
+      <input class="submit-button" type="submit" value="Upload" />
+    </form>
+
+    <p>Note: can submit multiple files</p>
+    <p>For source code : <a href="https://github.com/abhishekkumar11724/rapidfort_api"> github</a></p>
+</body>
+</html>

@@ -1,74 +1,81 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const dotenv = require("dotenv");
 
-const formidable = require("formidable");
-
-// const fileUpload = require("express-fileupload");
-const { exec } = require("child_process");
+const upload = multer({});
+dotenv.config({ path: "config.env" });
 
 const app = express();
-// app.use(fileUpload({ useTempFiles: false }));
 
-const port = 5000;
+const stylesForDetails = `
+<style>
+body {
+  margin: 100px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background-color: rgb(208, 208, 208);
+  text-align: center;
+}
+
+h3 {
+
+}
+
+.individualFile {
+  background: rgb(57, 206, 255);
+  margin: 0 100px 20px 100px;
+  border: solid 5px;
+  border-radius: 10px;
+
+}
+</style>
+`;
 
 app.get("/", (req, res) => {
-  res.send(`
-    <h2>With <code>"express"</code> npm package</h2>
-    <form action="/upload" enctype="multipart/form-data" method="post">
-      <div>File: <input type="file" name="myFile" multiple="multiple" /></div>
-      <input type="submit" value="Upload" />
-    </form>
-  `);
+  const indexFile = path.join(__dirname, "index.html");
+  res.sendFile(indexFile);
 });
 
-app.post("/upload", (req, res, next) => {
-  const form = new formidable.IncomingForm({});
-
+app.post("/", upload.array("myFile"), (req, res, next) => {
   let details = [];
 
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return res.status(500).json({ error: "Error processing file upload" });
-    }
+  if (!req.files) {
+    return res.status(200).json("no file uploaded");
+  }
 
-    const inputFile = files.myFile;
-    // for (let index = 0; index < files.myFile.length; index++) {
-    exec(
-      `file -`,
-      { input: inputFile, encoding: "buffer" },
-      (error, stdout, stderr) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).json({ error });
-        }
-
-        const temp = stdout.toString().trim();
-        console.log("hello world:", temp);
-        details.push(temp);
-        return res
-          .status(200)
-          .json({ message: "File uploaded successfully", details });
-      }
-    );
-    // }
-
-    // res.json({ fields, files });
+  req.files.forEach((element) => {
+    details.push({
+      encoding: element.encoding,
+      mime: element.mimetype,
+      size: element.size,
+      filename: element.originalname,
+    });
   });
+  let str = "";
+
+  if (!req.files) {
+    str += "<h1>No file was Uploaded! please return and try again</h1>";
+  }
+  str += `<a href="../"><button onClick=>return </button></a>`;
+
+  if (req.files) {
+    str += `<h2>Details of Uploaded files :</h2>`;
+  }
+  details.forEach((element) => {
+    str += `
+    ${stylesForDetails}
+    
+    <div class="individualFile">
+        <h3> file name : ${element.filename}</h3> 
+        <h3> mime : ${element.mime}</h3> 
+        <h3> encoding : ${element.encoding}</h3>
+        <h3> size : ${element.size / 1024} MB</h3>
+    </div> `;
+  });
+
+  return res.status(200).send(str);
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}`);
 });
-
-// exec(
-//   `file -`,
-//   { input: inputFile, encoding: "buffer" },
-//   (error, stdout, stderr) => {
-//     if (error) {
-//       return res
-//         .status(500)
-//         .json({ error: "Error processing the file", error });
-//     }
-//     const fileInfo = stdout.toString().trim();
-//     return res.json({ message: "File uploaded successfully", fileInfo });
-//   }
-// );
