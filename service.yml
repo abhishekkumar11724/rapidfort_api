@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: file-details-service
+  name: rapidfort-api-service
 spec:
   selector:
     app: file-details-app
