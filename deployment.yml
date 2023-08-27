@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-details-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-details-app
+  template:
+    metadata:
+      labels:
+        app: file-details-app
+    spec:
+      containers:
+      - name: file-details-container
+        image: your-docker-image-name
+        ports:
+        - containerPort: 5000
